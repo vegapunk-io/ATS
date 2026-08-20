@@ -1,4 +1,4 @@
-<![CDATA[<div align="center">
+<div align="center">
 
 # 🏢 Attendance Tracker
 
@@ -27,8 +27,8 @@
 ## 📋 Table of Contents
 
 - [✨ Features](#-features)
-- [🏗️ Architecture](#%EF%B8%8F-architecture)
-- [🛠️ Tech Stack](#%EF%B8%8F-tech-stack)
+- [🏗️ Architecture](#️-architecture)
+- [🛠️ Tech Stack](#️-tech-stack)
 - [📊 Database Schema](#-database-schema)
 - [🚀 Quick Start](#-quick-start)
 - [🔌 API Endpoints](#-api-endpoints)
@@ -42,6 +42,7 @@
 ## ✨ Features
 
 ### 👤 User Features
+
 | Feature | Description |
 |---------|-------------|
 | 🔐 Authentication | Secure JWT-based login/logout |
@@ -54,6 +55,7 @@
 | 👤 Profile Management | Update personal information |
 
 ### 👑 Admin Features
+
 | Feature | Description |
 |---------|-------------|
 | 👥 People Management | Full CRUD for employees |
@@ -78,17 +80,17 @@
 
 ```mermaid
 graph TB
-    subgraph "Frontend"
+    subgraph Frontend
         A[Browser] -->|HTML/CSS/JS| B[Static Files]
     end
     
-    subgraph "Backend"
+    subgraph Backend
         C[FastAPI Server] --> D[Auth Middleware]
         D --> E[API Routes]
         E --> F[Business Logic]
     end
     
-    subgraph "Database"
+    subgraph Database
         G[PostgreSQL] --> H[Users Table]
         G --> I[People Table]
         G --> J[Attendance Table]
@@ -98,10 +100,6 @@ graph TB
     
     B -->|HTTP| C
     F -->|SQLAlchemy| G
-    
-    style A fill:#61dafb,stroke:#333,color:#000
-    style C fill:#009688,stroke:#333,color:#fff
-    style G fill:#4169E1,stroke:#333,color:#fff
 ```
 
 ### Request Flow
@@ -141,30 +139,21 @@ flowchart LR
     F --> G[Access Protected Routes]
     G -->|Token Valid| H[Return Data]
     G -->|Token Invalid| I[Redirect to Login]
-    
-    style A fill:#e3f2fd,stroke:#1976d2
-    style C fill:#c8e6c9,stroke:#388e3c
-    style D fill:#ffcdd2,stroke:#d32f2f
 ```
 
 ---
 
 ## 🛠️ Tech Stack
 
-<div align="center">
-
 | Layer | Technology | Purpose |
 |-------|------------|---------|
-| **Backend** | ![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?style=flat-square) | REST API Framework |
-| **Database** | ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?style=flat-square) | Primary Database |
-| **ORM** | ![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-2.0-D71F00?style=flat-square) | Database ORM |
-| **Auth** | ![JWT](https://img.shields.io/badge/JWT-JSON-000000?style=flat-square) | Authentication |
-| **Validation** | ![Pydantic](https://img.shields.io/badge/Pydantic-v2-E92063?style=flat-square) | Data Validation |
-| **Frontend** | ![JavaScript](https://img.shields.io/badge/JavaScript-ES6-F7DF1E?style=flat-square) | Client-side Logic |
-| **Styling** | ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat-square) | UI Styling |
-| **Password** | ![Bcrypt](https://img.shields.io/badge/Bcrypt-Hashing-3F51B5?style=flat-square) | Password Hashing |
-
-</div>
+| **Backend** | FastAPI | REST API Framework |
+| **Database** | PostgreSQL | Primary Database |
+| **ORM** | SQLAlchemy 2.0 | Database ORM |
+| **Auth** | JWT + bcrypt | Authentication |
+| **Validation** | Pydantic v2 | Data Validation |
+| **Frontend** | JavaScript ES6 | Client-side Logic |
+| **Styling** | CSS3 | UI Styling |
 
 ---
 
@@ -219,7 +208,6 @@ erDiagram
         date end_date
         text reason
         string status
-        int approved_by FK
     }
     
     TASKS {
@@ -227,26 +215,9 @@ erDiagram
         string title
         text description
         int assigned_to FK
-        int assigned_by FK
         string priority
         string status
         date due_date
-    }
-    
-    DEPARTMENTS {
-        int id PK
-        string name
-        text description
-        int head_id FK
-        boolean is_active
-    }
-    
-    SHIFTS {
-        int id PK
-        string name
-        time start_time
-        time end_time
-        boolean is_active
     }
 ```
 
@@ -258,7 +229,6 @@ erDiagram
 
 - Python 3.10+
 - PostgreSQL 12+
-- pip or poetry
 
 ### Installation
 
@@ -280,20 +250,8 @@ pip install tzdata  # Windows only
 ### Database Setup
 
 ```sql
--- Connect to PostgreSQL and run:
 CREATE USER attendance WITH PASSWORD 'attendance_dev';
 CREATE DATABASE attendance OWNER attendance;
-```
-
-### Configuration
-
-```bash
-# Copy .env.example to .env
-cp .env.example .env
-
-# Edit .env with your database credentials
-DATABASE_URL=postgresql+asyncpg://attendance:attendance_dev@localhost:5432/attendance
-SECRET_KEY=your-secret-key-here
 ```
 
 ### Run the Application
@@ -319,12 +277,14 @@ uvicorn app.main:app --reload
 ## 🔌 API Endpoints
 
 ### Authentication
+
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | `POST` | `/api/auth/login` | Login and get JWT token |
 | `GET` | `/api/auth/me` | Get current user info |
 
 ### People Management
+
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | `GET` | `/api/people` | List all people |
@@ -332,24 +292,17 @@ uvicorn app.main:app --reload
 | `PATCH` | `/api/people/{id}` | Update person |
 | `DELETE` | `/api/people/{id}` | Delete person |
 
-### User Management
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/users` | List all users |
-| `POST` | `/api/users` | Create new user |
-| `PATCH` | `/api/users/{id}` | Update user |
-| `DELETE` | `/api/users/{id}` | Delete user |
-
 ### Attendance
+
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | `GET` | `/api/attendance` | List attendance records |
 | `GET` | `/api/attendance/today` | Get today's record |
 | `POST` | `/api/attendance/check-in` | Self check-in |
 | `POST` | `/api/attendance/check-out` | Self check-out |
-| `POST` | `/api/attendance/manual` | Manual entry (Admin) |
 
 ### Leaves
+
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | `GET` | `/api/leaves` | List leave requests |
@@ -357,6 +310,7 @@ uvicorn app.main:app --reload
 | `PATCH` | `/api/leaves/{id}` | Approve/Reject leave |
 
 ### Tasks
+
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | `GET` | `/api/tasks` | List tasks |
@@ -364,18 +318,18 @@ uvicorn app.main:app --reload
 | `PATCH` | `/api/tasks/{id}` | Update task status |
 
 ### Chat
+
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | `GET` | `/api/chat` | Get messages |
 | `POST` | `/api/chat` | Send message |
 
 ### Reports
+
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | `GET` | `/api/reports/summary` | Get summary report |
 | `GET` | `/api/reports/export` | Export to CSV |
-
-> 📖 Full API documentation available at [http://localhost:8000/docs](http://localhost:8000/docs)
 
 ---
 
@@ -385,7 +339,6 @@ uvicorn app.main:app --reload
 ATS/
 ├── attendance-tracker/
 │   ├── app/
-│   │   ├── __init__.py
 │   │   ├── main.py              # FastAPI application entry
 │   │   ├── config.py            # Settings management
 │   │   ├── database.py          # Database connection
@@ -393,8 +346,6 @@ ATS/
 │   │   ├── schemas.py           # Pydantic schemas
 │   │   ├── security.py          # JWT & password hashing
 │   │   ├── deps.py              # Dependencies (auth)
-│   │   ├── audit.py             # Activity logging
-│   │   ├── notifications.py     # Email notifications
 │   │   ├── routers/
 │   │   │   ├── auth.py          # Authentication routes
 │   │   │   ├── users.py         # User management
@@ -405,66 +356,18 @@ ATS/
 │   │   │   ├── chat.py          # Chat messaging
 │   │   │   ├── salary.py        # Salary management
 │   │   │   ├── reports.py       # Reports & export
-│   │   │   ├── departments.py   # Department management
-│   │   │   ├── shifts.py        # Shift management
-│   │   │   ├── holidays.py      # Holiday calendar
-│   │   │   ├── breaks.py        # Break tracking
-│   │   │   ├── overtime.py      # Overtime requests
-│   │   │   ├── shift_swaps.py   # Shift swap requests
-│   │   │   ├── announcements.py # Announcements
-│   │   │   ├── notifications.py # Notifications
-│   │   │   ├── meetings.py      # Meeting scheduler
-│   │   │   ├── profile.py       # User profile
-│   │   │   ├── settings.py      # App settings
-│   │   │   └── activity_logs.py # Audit logs
+│   │   │   └── ...              # 22 modules total
 │   │   └── static/
 │   │       ├── index.html       # Main SPA
 │   │       ├── login.html       # Login page
 │   │       ├── app.js           # Frontend logic
 │   │       └── styles.css       # CSS styling
 │   ├── scripts/
-│   │   ├── seed.py              # Database seeding
-│   │   └── *.py                 # Video generation scripts
+│   │   └── seed.py              # Database seeding
 │   ├── requirements.txt
-│   ├── .env.example
-│   └── README.md
+│   └── .env.example
 └── LICENSE
 ```
-
----
-
-## 🎨 Screenshots
-
-<div align="center">
-
-### 🔐 Login Page
-![Login](https://via.placeholder.com/800x400/1a1a2e/ffffff?text=Login+Page)
-
-### 📊 Dashboard
-![Dashboard](https://via.placeholder.com/800x400/16213e/ffffff?text=Dashboard)
-
-### 👥 People Management
-![People](https://via.placeholder.com/800x400/0f3460/ffffff?text=People+Management)
-
-### 📅 Attendance Records
-![Attendance](https://via.placeholder.com/800x400/533483/ffffff?text=Attendance+Records)
-
-</div>
-
----
-
-## 🔧 Configuration
-
-### Environment Variables
-
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `DATABASE_URL` | PostgreSQL connection string | `postgresql+asyncpg://...` |
-| `SECRET_KEY` | JWT signing key | `change-me-in-production` |
-| `JWT_ALGORITHM` | JWT algorithm | `HS256` |
-| `ACCESS_TOKEN_EXPIRE_MINUTES` | Token expiry | `720` |
-| `APP_NAME` | Application name | `Attendance Tracker` |
-| `APP_TIMEZONE` | Timezone | `Asia/Kolkata` |
 
 ---
 
@@ -500,4 +403,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 Made with ❤️ by [Vegapunk-io](https://github.com/vegapunk-io)
 
 </div>
-]]>
