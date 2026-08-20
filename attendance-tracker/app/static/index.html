@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Attendance Tracker</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to content</a>
+  <div class="app">
+    <!-- Progress Bar -->
+    <div class="progress-bar" id="progress-bar"></div>
+    
+    <!-- Mobile menu button -->
+    <button class="mobile-menu-btn" id="mobile-menu-btn">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    
+    <!-- ======= Sidebar ======= -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-inner">
+        <!-- Brand -->
+        <div class="sidebar-brand">
+          <div class="logo-wrap">
+            <div class="logo">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            </div>
+          </div>
+          <div class="brand-text">
+            <span class="brand-name">Attendly</span>
+            <span class="brand-sub">v1.0</span>
+          </div>
+          <button class="sidebar-collapse-toggle" id="sidebar-collapse-btn" title="Collapse sidebar">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+          </button>
+        </div>
+
+        <!-- Search -->
+        <div class="sidebar-search" id="sidebar-search-trigger">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <span class="sidebar-search-label">Quick search</span>
+          <kbd class="sidebar-kbd"><span>Ctrl</span>K</kbd>
+        </div>
+
+        <!-- Nav -->
+        <nav class="nav" id="sidebar-nav">
+          <div class="nav-group">
+            <div class="nav-group-label">Menu</div>
+            <button class="nav-item active" data-view="home">
+              <span class="nav-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
+              <span class="nav-label">Dashboard</span>
+            </button>
+            <button class="nav-item" data-view="calendar">
+              <span class="nav-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg></span>
+              <span class="nav-label">Calendar</span>
+            </button>
+            <button class="nav-item" data-view="records">
+              <span class="nav-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/></svg></span>
+              <span class="nav-label">Attendance</span>
+            </button>
+          </div>
+
+          <div class="nav-group">
+            <div class="nav-group-label">Workspace</div>
+            <button class="nav-item" data-view="tasks">
+              <span class="nav-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></span>
+              <span class="nav-label">Tasks</span>
+            </button>
+            <button class="nav-item" data-view="chat">
+              <span class="nav-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 21 1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z"/></svg></span>
+              <span class="nav-label">Chat</span>
+            </button>
+            <button class="nav-item" data-view="meetings">
+              <span class="nav-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/></svg></span>
+              <span class="nav-label">Meetings</span>
+            </button>
+            <button class="nav-item" data-view="leaves">
+              <span class="nav-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8c0-5-3-8-8-8S1 3 1 8c0 4 3 11 11 11h5V8Z"/><path d="M2 8h16"/></svg></span>
+              <span class="nav-label">Leaves</span>
+              <span class="nav-badge" id="nav-badge-leaves"></span>
+            </button>
+            <button class="nav-item" data-view="breaks">
+              <span class="nav-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v2"/><path d="M14 2v2"/><path d="M16 8a1 1 0 0 1 1 1v8a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1h14a4 4 0 1 1 0 8h-1"/><path d="M6 2v2"/></svg></span>
+              <span class="nav-label">Breaks</span>
+            </button>
+            <button class="nav-item" data-view="overtime">
+              <span class="nav-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+              <span class="nav-label">Overtime</span>
+            </button>
+            <button class="nav-item" data-view="shift-swaps">
+              <span class="nav-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 3 4 4-4 4"/><path d="M20 7H4"/><path d="m8 21-4-4 4-4"/><path d="M4 17h16"/></svg></span>
+              <span class="nav-label">Shift Swaps</span>
+            </button>
+            <button class="nav-item" data-view="profile">
+              <span class="nav-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg></span>
+              <span class="nav-label">My Profile</span>
+            </button>
+          </div>
+
+          <div class="nav-group admin-only hidden">
+            <div class="nav-group-label">Team</div>
+            <button class="nav-item" data-view="team">
+              <span class="nav-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+              <span class="nav-label">Team</span>
+            </button>
+            <button class="nav-item" data-view="people">
+              <span class="nav-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+              <span class="nav-label">People</span>
+            </button>
+            <button class="nav-item" data-view="users">
+              <span class="nav-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+              <span class="nav-label">Users</span>
+            </button>
+            <button class="nav-item" data-view="departments">
+              <span class="nav-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="20" x="4" y="2" rx="2" ry="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/><path d="M12 10h.01"/><path d="M12 14h.01"/><path d="M16 10h.01"/><path d="M16 14h.01"/><path d="M8 10h.01"/><path d="M8 14h.01"/></svg></span>
+              <span class="nav-label">Departments</span>
+            </button>
+          </div>
+
+          <div class="nav-group admin-only hidden">
+            <div class="nav-group-label">Organization</div>
+            <button class="nav-item" data-view="announcements">
+              <span class="nav-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-5v12L3 13v-2z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg></span>
+              <span class="nav-label">Announcements</span>
+              <span class="nav-badge" id="nav-badge-announcements"></span>
+            </button>
+            <button class="nav-item" data-view="notifications">
+              <span class="nav-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></span>
+              <span class="nav-label">Notifications</span>
+            </button>
+          </div>
+
+          <div class="nav-group admin-only hidden">
+            <div class="nav-group-label">Finance</div>
+            <button class="nav-item" data-view="salary">
+              <span class="nav-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
+              <span class="nav-label">Salary</span>
+            </button>
+            <button class="nav-item" data-view="reports">
+              <span class="nav-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg></span>
+              <span class="nav-label">Reports</span>
+            </button>
+          </div>
+
+          <div class="nav-group admin-only hidden">
+            <div class="nav-group-label">System</div>
+            <button class="nav-item" data-view="activity-logs">
+              <span class="nav-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></span>
+              <span class="nav-label">Audit Log</span>
+            </button>
+            <button class="nav-item" data-view="holidays">
+              <span class="nav-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"/><path d="M4 6v12c0 1.1.9 2 2 2h14v-4"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg></span>
+              <span class="nav-label">Holidays</span>
+            </button>
+            <button class="nav-item" data-view="shifts">
+              <span class="nav-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+              <span class="nav-label">Shifts</span>
+            </button>
+            <button class="nav-item" data-view="settings">
+              <span class="nav-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span>
+              <span class="nav-label">Settings</span>
+            </button>
+          </div>
+        </nav>
+
+        <!-- Footer -->
+        <div class="sidebar-foot">
+          <div class="sidebar-user" id="sidebar-user-card">
+            <div class="user-avatar" id="me-avatar">A<div class="online-dot"></div></div>
+            <div class="user-info">
+              <b id="me-name">—</b>
+              <span id="me-role">—</span>
+            </div>
+          </div>
+          <div class="sidebar-actions">
+            <button class="sidebar-action-btn" id="sidebar-theme-btn" title="Toggle theme">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+              <span class="sidebar-action-label">Theme</span>
+            </button>
+            <button class="sidebar-action-btn" onclick="showView('profile'); loadProfile();" title="Profile">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>
+              <span class="sidebar-action-label">Profile</span>
+            </button>
+            <button class="sidebar-action-btn danger" id="sidebar-logout-btn" title="Sign out">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+              <span class="sidebar-action-label">Sign out</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ======= Main content ======= -->
+    <main class="main" id="main-content">
+      <!-- Announcement Banner -->
+      <div class="announcement-banner" id="announcement-banner" style="display:none;">
+        <div class="announcement-banner-content">
+          <span class="announcement-banner-icon">📢</span>
+          <span id="announcement-banner-text"></span>
+        </div>
+        <button class="announcement-banner-close" id="announcement-banner-close">✕</button>
+      </div>
+
+      <!-- ---------- Dashboard ---------- -->
+      <section id="view-home" class="view">
+        <div class="page-head">
+          <div>
+            <h2>Dashboard</h2>
+            <div class="sub">Today's attendance at a glance</div>
+          </div>
+          <div class="header-actions">
+            <span class="date-display" id="header-date"></span>
+            <button class="theme-toggle" id="theme-toggle-btn" title="Toggle dark mode">
+              <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+              <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="hero" id="hero">
+          <div>
+            <div class="date" id="hero-date">—</div>
+            <div class="day" id="hero-day">—</div>
+            <div class="stats">
+              <div class="stat"><b id="hero-in">—</b>Check-in</div>
+              <div class="stat"><b id="hero-out">—</b>Check-out</div>
+              <div class="stat"><b id="hero-dur">—</b>Duration</div>
+              <div class="stat" id="hero-status-wrap"><b id="hero-status">—</b>Status</div>
+            </div>
+          </div>
+          <div class="actions" id="hero-actions">
+            <div class="streak-badge" id="streak-badge">
+              <span class="streak-fire">🔥</span>
+              <span class="streak-count" id="streak-count">0</span>
+              <span class="streak-label">day streak</span>
+            </div>
+            <button class="btn" id="btn-checkin">Check in</button>
+            <button class="btn checkout" id="btn-checkout">Check out</button>
+          </div>
+        </div>
+
+        <!-- Monthly Summary Cards -->
+        <div class="stat-cards" id="monthly-stats">
+          <div class="stat-card stat-card-accent">
+            <div class="v" id="stat-streak">0</div>
+            <div class="k">🔥 Current Streak</div>
+          </div>
+          <div class="stat-card">
+            <div class="v" id="stat-present">0</div>
+            <div class="k">✅ Present this month</div>
+          </div>
+          <div class="stat-card">
+            <div class="v" id="stat-absent">0</div>
+            <div class="k">❌ Absent this month</div>
+          </div>
+          <div class="stat-card">
+            <div class="v" id="stat-hours">0h</div>
+            <div class="k">⏱️ Hours worked</div>
+          </div>
+          <div class="stat-card">
+            <div class="v" id="stat-rate">0%</div>
+            <div class="k">📊 Attendance rate</div>
+          </div>
+          <div class="stat-card stat-card-warning">
+            <div class="v" id="stat-late">0</div>
+            <div class="k">⏰ Late check-ins</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Last 7 days</h3>
+          <div class="week" id="week-strip"></div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="charts-grid">
+          <div class="card chart-card">
+            <h3>📊 Attendance Trend (Last 30 Days)</h3>
+            <div class="chart-container">
+              <canvas id="chart-trend"></canvas>
+            </div>
+          </div>
+          <div class="card chart-card">
+            <h3>📈 Status Distribution (This Month)</h3>
+            <div class="chart-container chart-container-sm">
+              <canvas id="chart-status"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="card chart-card">
+          <h3>📅 Weekly Comparison</h3>
+          <div class="chart-container">
+            <canvas id="chart-weekly"></canvas>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>My recent attendance</h3>
+          <div class="table-wrap" id="my-recent-table"><div class="empty">Loading…</div></div>
+        </div>
+      </section>
+
+      <!-- ---------- Calendar ---------- -->
+      <section id="view-calendar" class="view hidden">
+        <div class="page-head">
+          <div>
+            <h2>Calendar</h2>
+            <div class="sub">Monthly attendance overview</div>
+          </div>
+          <div class="header-actions">
+            <button class="btn sm secondary" id="cal-prev">◀</button>
+            <span class="date-display" id="cal-month-label"></span>
+            <button class="btn sm secondary" id="cal-next">▶</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="calendar-legend">
+            <span class="cal-legend-item"><span class="cal-dot present"></span> Present</span>
+            <span class="cal-legend-item"><span class="cal-dot absent"></span> Absent</span>
+            <span class="cal-legend-item"><span class="cal-dot half_day"></span> Half Day</span>
+            <span class="cal-legend-item"><span class="cal-dot holiday"></span> Holiday</span>
+            <span class="cal-legend-item"><span class="cal-dot no-record"></span> No Record</span>
+          </div>
+          <div class="calendar-grid" id="calendar-grid"></div>
+        </div>
+      </section>
+
+      <!-- ---------- Leaves ---------- -->
+      <section id="view-leaves" class="view hidden">
+        <div class="page-head">
+          <div>
+            <h2>Leave Management</h2>
+            <div class="sub">Apply and manage leave requests</div>
+          </div>
+          <button class="btn" id="btn-apply-leave">+ Apply Leave</button>
+        </div>
+        <div class="card">
+          <div class="filters">
+            <div class="f"><label>Status</label>
+              <select id="leave-status-filter">
+                <option value="">All</option>
+                <option value="pending">Pending</option>
+                <option value="approved">Approved</option>
+                <option value="rejected">Rejected</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="table-wrap" id="leaves-table"><div class="empty">Loading…</div></div>
+        </div>
+      </section>
+
+      <!-- ---------- Breaks ---------- -->
+      <section id="view-breaks" class="view hidden">
+        <div class="page-head">
+          <div>
+            <h2>Break Tracking</h2>
+            <div class="sub">Track lunch and break hours</div>
+          </div>
+        </div>
+        <div class="hero" style="background: linear-gradient(135deg, #059669 0%, #10b981 100%);">
+          <div>
+            <div class="date">Today's Breaks</div>
+            <div class="day" id="break-status">No break started</div>
+            <div class="stats">
+              <div class="stat"><b id="break-count">0</b>Breaks today</div>
+              <div class="stat"><b id="break-total">0m</b>Total break time</div>
+            </div>
+          </div>
+          <div class="actions">
+            <button class="btn" id="btn-start-break">Start Break</button>
+            <button class="btn checkout" id="btn-end-break" disabled>End Break</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Today's Break History</h3>
+          <div class="table-wrap" id="breaks-table"><div class="empty">No breaks today</div></div>
+        </div>
+      </section>
+
+      <!-- ---------- Team Dashboard ---------- -->
+      <section id="view-team" class="view hidden">
+        <div class="page-head">
+          <div>
+            <h2>Team Dashboard</h2>
+            <div class="sub">Who's checked in right now</div>
+          </div>
+          <button class="btn secondary" id="btn-refresh-team">🔄 Refresh</button>
+        </div>
+        <div class="stat-cards" id="team-stats">
+          <div class="stat-card stat-card-accent">
+            <div class="v" id="team-total">0</div>
+            <div class="k">👥 Total team</div>
+          </div>
+          <div class="stat-card" style="background: var(--success-soft); border-color: var(--success);">
+            <div class="v" id="team-in">0</div>
+            <div class="k">✅ Checked in</div>
+          </div>
+          <div class="stat-card" style="background: var(--danger-soft); border-color: var(--danger);">
+            <div class="v" id="team-out">0</div>
+            <div class="k">❌ Not checked in</div>
+          </div>
+          <div class="stat-card" style="background: var(--warning-soft); border-color: var(--warning);">
+            <div class="v" id="team-onclock">0</div>
+            <div class="k">🕐 On clock</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="table-wrap" id="team-table"><div class="empty">Loading…</div></div>
+        </div>
+      </section>
+
+      <!-- ---------- Records ---------- -->
+      <section id="view-records" class="view hidden">
+        <div class="page-head">
+          <div>
+            <h2>Attendance Records</h2>
+            <div class="sub">View and manage attendance entries</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="filters">
+            <div class="f"><label>From</label><input type="date" id="rec-from" /></div>
+            <div class="f"><label>To</label><input type="date" id="rec-to" /></div>
+            <div class="f admin-only"><label>Person</label><select id="rec-person"></select></div>
+            <div class="f"><label>Status</label>
+              <select id="rec-status">
+                <option value="">All</option>
+                <option value="present">Present</option>
+                <option value="absent">Absent</option>
+                <option value="half_day">Half day</option>
+                <option value="holiday">Holiday</option>
+              </select>
+            </div>
+            <div class="f"><label>Search</label><input type="text" id="rec-search" placeholder="Search... (Ctrl+K)" /></div>
+            <div class="f"><label>&nbsp;</label><button class="btn" id="rec-apply">Apply</button></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="table-wrap" id="records-table"><div class="empty">Loading…</div></div>
+        </div>
+      </section>
+
+      <!-- ---------- People ---------- -->
+      <section id="view-people" class="view hidden">
+        <div class="page-head">
+          <div>
+            <h2>People</h2>
+            <div class="sub">Employees, students or members being tracked</div>
+          </div>
+          <button class="btn" id="btn-add-person">+ Add person</button>
+          <button class="btn secondary" id="btn-import-csv">⬆ Import CSV</button>
+        </div>
+        <div class="card">
+          <div class="table-wrap" id="people-table"><div class="empty">Loading…</div></div>
+        </div>
+      </section>
+
+      <!-- ---------- Users ---------- -->
+      <section id="view-users" class="view hidden">
+        <div class="page-head">
+          <div>
+            <h2>User Accounts</h2>
+            <div class="sub">Login accounts and roles</div>
+          </div>
+          <button class="btn" id="btn-add-user">+ Add user</button>
+        </div>
+        <div class="card">
+          <div class="table-wrap" id="users-table"><div class="empty">Loading…</div></div>
+        </div>
+      </section>
+
+      <!-- ---------- Reports ---------- -->
+      <section id="view-reports" class="view hidden">
+        <div class="page-head">
+          <div>
+            <h2>Reports</h2>
+            <div class="sub">Summary per person for a date range</div>
+          </div>
+          <div style="display:flex;gap:10px;">
+            <button class="btn secondary" id="btn-export">⬇ Export CSV</button>
+            <button class="btn secondary" id="btn-export-xlsx">📊 Export Excel</button>
+            <button class="btn" id="btn-export-pdf">📄 Export PDF</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="filters">
+            <div class="f"><label>From</label><input type="date" id="rep-from" /></div>
+            <div class="f"><label>To</label><input type="date" id="rep-to" /></div>
+            <div class="f"><label>Group</label><select id="rep-group"><option value="">All groups</option></select></div>
+            <div class="f"><label>&nbsp;</label><button class="btn" id="rep-run">Run report</button></div>
+          </div>
+        </div>
+        <div class="stat-cards" id="rep-stats"></div>
+        <div class="card">
+          <div class="table-wrap" id="reports-table"><div class="empty">Run a report to see results.</div></div>
+        </div>
+      </section>
+
+      <!-- ---------- Holidays ---------- -->
+      <section id="view-holidays" class="view hidden">
+        <div class="page-head">
+          <div>
+            <h2>Holidays</h2>
+            <div class="sub">Manage company holidays</div>
+          </div>
+          <button class="btn" id="btn-add-holiday">+ Add holiday</button>
+        </div>
+        <div class="card">
+          <div class="table-wrap" id="holidays-table"><div class="empty">Loading…</div></div>
+        </div>
+      </section>
+
+      <!-- ---------- Shifts ---------- -->
+      <section id="view-shifts" class="view hidden">
+        <div class="page-head">
+          <div>
+            <h2>Shifts & Roster</h2>
+            <div class="sub">Manage shifts and assign them to people</div>
+          </div>
+          <div style="display:flex;gap:10px;">
+            <button class="btn" id="btn-add-shift">+ Add shift</button>
+            <button class="btn" id="btn-add-assignment">+ Assign shift</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Shifts</h3>
+          <div class="table-wrap" id="shifts-table"><div class="empty">Loading…</div></div>
+        </div>
+        <div class="card">
+          <h3>Assignments</h3>
+          <div class="table-wrap" id="assignments-table"><div class="empty">Loading…</div></div>
+        </div>
+      </section>
+
+      <!-- ---------- Notifications ---------- -->
+      <section id="view-notifications" class="view hidden">
+        <div class="page-head">
+          <div>
+            <h2>Notifications</h2>
+            <div class="sub">Send reminders and alerts</div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Check-in Reminders</h3>
+          <p class="muted" style="margin-bottom:12px;">Send check-in reminders to employees who haven't checked in today.</p>
+          <div style="display:flex;gap:10px;align-items:flex-end;">
+            <div class="f"><label>Person</label><select id="notif-person"></select></div>
+            <button class="btn" id="btn-send-reminder">Send Reminder</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Late Check-in Alert</h3>
+          <p class="muted" style="margin-bottom:12px;">Send an alert to admin when an employee checks in late.</p>
+          <div style="display:flex;gap:10px;align-items:flex-end;">
+            <div class="f"><label>Person</label><select id="notif-late-person"></select></div>
+            <button class="btn" id="btn-send-late-alert">Send Alert</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Email Settings</h3>
+          <p class="muted" style="margin-bottom:12px;">Configure SMTP settings in the <code>.env</code> file.</p>
+          <div id="notif-settings"><div class="empty">Loading…</div></div>
+        </div>
+      </section>
+
+      <!-- ---------- Departments ---------- -->
+      <section id="view-departments" class="view hidden">
+        <div class="page-head">
+          <div>
+            <h2>Departments</h2>
+            <div class="sub">Manage organizational departments</div>
+          </div>
+          <button class="btn" id="btn-add-dept">+ Add Department</button>
+        </div>
+        <div class="card">
+          <div class="table-wrap" id="departments-table"><div class="empty">Loading…</div></div>
+        </div>
+      </section>
+
+      <!-- ---------- Announcements ---------- -->
+      <section id="view-announcements" class="view hidden">
+        <div class="page-head">
+          <div>
+            <h2>Announcements</h2>
+            <div class="sub">Company-wide notices and updates</div>
+          </div>
+          <button class="btn" id="btn-add-announcement">+ New Announcement</button>
+        </div>
+        <div class="announcements-list" id="announcements-list"></div>
+      </section>
+
+      <!-- ---------- Salary ---------- -->
+      <section id="view-salary" class="view hidden">
+        <div class="page-head">
+          <div>
+            <h2>Salary & Payroll</h2>
+            <div class="sub">Manage salary based on attendance</div>
+          </div>
+          <button class="btn" id="btn-generate-salary">💰 Generate Salary</button>
+        </div>
+        <div class="card">
+          <div class="filters">
+            <div class="f"><label>Month</label><select id="salary-month"></select></div>
+            <div class="f"><label>Year</label><select id="salary-year"></select></div>
+            <div class="f"><label>&nbsp;</label><button class="btn" id="btn-filter-salary">Filter</button></div>
+          </div>
+        </div>
+        <div class="stat-cards" id="salary-stats"></div>
+        <div class="card">
+          <div class="table-wrap" id="salary-table"><div class="empty">Loading…</div></div>
+        </div>
+      </section>
+
+      <!-- ---------- Settings ---------- -->
+      <section id="view-settings" class="view hidden">
+        <div class="page-head">
+          <div>
+            <h2>Settings</h2>
+            <div class="sub">Application configuration</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="table-wrap" id="settings-table"><div class="empty">Loading…</div></div>
+        </div>
+      </section>
+
+      <!-- ---------- Activity Log ---------- -->
+      <section id="view-activity-logs" class="view hidden">
+        <div class="page-head">
+          <div>
+            <h2>Activity Audit Log</h2>
+            <div class="sub">Track all system changes</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="filters">
+            <div class="f"><label>Entity</label><select id="log-entity-filter"><option value="">All</option><option value="users">Users</option><option value="people">People</option><option value="attendance">Attendance</option><option value="leaves">Leaves</option><option value="tasks">Tasks</option><option value="meetings">Meetings</option><option value="overtime">Overtime</option><option value="shift-swaps">Shift Swaps</option><option value="holidays">Holidays</option><option value="departments">Departments</option><option value="announcements">Announcements</option><option value="salary">Salary</option><option value="settings">Settings</option></select></div>
+            <div class="f"><label>Action</label><select id="log-action-filter"><option value="">All</option><option value="create">Create</option><option value="update">Update</option><option value="delete">Delete</option></select></div>
+            <div class="f"><label>&nbsp;</label><button class="btn" id="btn-load-logs">Load Logs</button></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="table-wrap" id="logs-table"><div class="empty">Click "Load Logs" to view.</div></div>
+        </div>
+      </section>
+
+      <!-- ---------- Overtime ---------- -->
+      <section id="view-overtime" class="view hidden">
+        <div class="page-head">
+          <div>
+            <h2>Overtime Requests</h2>
+            <div class="sub">Request and manage overtime hours</div>
+          </div>
+          <button class="btn" id="btn-add-overtime">+ Request Overtime</button>
+        </div>
+        <div class="card">
+          <div class="table-wrap" id="overtime-table"><div class="empty">Loading…</div></div>
+        </div>
+      </section>
+
+      <!-- ---------- Shift Swaps ---------- -->
+      <section id="view-shift-swaps" class="view hidden">
+        <div class="page-head">
+          <div>
+            <h2>Shift Swaps</h2>
+            <div class="sub">Request shift trades with colleagues</div>
+          </div>
+          <button class="btn" id="btn-add-swap">+ Request Swap</button>
+        </div>
+        <div class="card">
+          <div class="table-wrap" id="swaps-table"><div class="empty">Loading…</div></div>
+        </div>
+      </section>
+
+      <!-- ---------- Tasks ---------- -->
+      <section id="view-tasks" class="view hidden">
+        <div class="page-head">
+          <div>
+            <h2>Tasks</h2>
+            <div class="sub">Manage and track tasks</div>
+          </div>
+          <button class="btn" id="btn-add-task">+ New Task</button>
+        </div>
+        <div class="card">
+          <div class="filters">
+            <div class="f"><label>Status</label><select id="task-status-filter"><option value="">All</option><option value="todo">To Do</option><option value="in_progress">In Progress</option><option value="done">Done</option></select></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="table-wrap" id="tasks-table"><div class="empty">Loading…</div></div>
+        </div>
+      </section>
+
+      <!-- ---------- Chat ---------- -->
+      <section id="view-chat" class="view hidden">
+        <div class="page-head">
+          <div>
+            <h2>Team Chat</h2>
+            <div class="sub">Real-time messaging</div>
+          </div>
+          <select id="chat-channel" style="padding:6px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);">
+            <option value="general">General</option>
+            <option value="team">Team</option>
+            <option value="random">Random</option>
+          </select>
+        </div>
+        <div class="card" style="display:flex;flex-direction:column;height:60vh;">
+          <div id="chat-messages" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:8px;"></div>
+          <div style="padding:12px 16px;border-top:1px solid var(--border);display:flex;gap:8px;">
+            <input id="chat-input" placeholder="Type a message..." style="flex:1;padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);" />
+            <button class="btn" id="btn-send-chat">Send</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ---------- Meetings ---------- -->
+      <section id="view-meetings" class="view hidden">
+        <div class="page-head">
+          <div>
+            <h2>Meetings</h2>
+            <div class="sub">Schedule and manage meetings</div>
+          </div>
+          <button class="btn" id="btn-add-meeting">+ New Meeting</button>
+        </div>
+        <div class="card">
+          <div class="table-wrap" id="meetings-table"><div class="empty">Loading…</div></div>
+        </div>
+      </section>
+
+      <!-- ---------- Profile ---------- -->
+      <section id="view-profile" class="view hidden">
+        <div class="page-head">
+          <div>
+            <h2>My Profile</h2>
+            <div class="sub">View and manage your account</div>
+          </div>
+          <button class="btn" id="btn-edit-profile">✏️ Edit Profile</button>
+        </div>
+        <div class="profile-grid">
+          <div class="card profile-card">
+            <div class="profile-avatar" id="profile-avatar">A</div>
+            <h3 id="profile-name">—</h3>
+            <p class="muted" id="profile-role">—</p>
+            <div class="profile-details">
+              <div class="profile-row"><span class="muted">Username:</span> <b id="profile-username">—</b></div>
+              <div class="profile-row"><span class="muted">Email:</span> <b id="profile-email">—</b></div>
+              <div class="profile-row profile-person-field" style="display:none;"><span class="muted">Department:</span> <b id="profile-department">—</b></div>
+              <div class="profile-row profile-person-field" style="display:none;"><span class="muted">Linked Person:</span> <b id="profile-person-name">—</b></div>
+              <div class="profile-row"><span class="muted">Status:</span> <b id="profile-status">—</b></div>
+              <div class="profile-row"><span class="muted">Joined:</span> <b id="profile-joined">—</b></div>
+            </div>
+            <button class="btn secondary" style="width:100%;justify-content:center;margin-top:16px;" id="btn-change-pw">🔒 Change Password</button>
+          </div>
+          <div class="card">
+            <h3>📊 My Attendance Stats</h3>
+            <div class="stat-cards" style="margin-top:12px;">
+              <div class="stat-card stat-card-accent">
+                <div class="v" id="profile-streak">0</div>
+                <div class="k">🔥 Streak</div>
+              </div>
+              <div class="stat-card">
+                <div class="v" id="profile-present">0</div>
+                <div class="k">✅ Present</div>
+              </div>
+              <div class="stat-card">
+                <div class="v" id="profile-hours">0h</div>
+                <div class="k">⏱️ Hours</div>
+              </div>
+              <div class="stat-card">
+                <div class="v" id="profile-rate">0%</div>
+                <div class="k">📊 Rate</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer class="app-footer">
+        Attendance Tracker v2.0 · Built with FastAPI + PostgreSQL
+      </footer>
+    </main>
+  </div>
+
+  <!-- ======= Modal ======= -->
+  <div class="modal-backdrop" id="modal-backdrop">
+    <div class="modal" id="modal-box">
+      <h3 id="modal-title">Title</h3>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <div id="toast-wrap"></div>
+  <button class="scroll-top-btn" id="scroll-top-btn" title="Scroll to top">↑</button>
+  <script src="/static/app.js"></script>
+</body>
+</html>

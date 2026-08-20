@@ -1,0 +1,12 @@
+.venv/
+venv/
+__pycache__/
+*.pyc
+.env
+*.db
+.DS_Store
+*.mp4
+*.log
+screenshots/
+scripts/frames*/
+scripts/showcase_frames/
